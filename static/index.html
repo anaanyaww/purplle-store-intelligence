@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brigade Road — Live Store Intelligence</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: #0f0f13; color: #e2e8f0; min-height: 100vh; padding: 24px; }
+  h1 { font-size: 1.4rem; color: #a78bfa; margin-bottom: 4px; }
+  .subtitle { font-size: 0.8rem; color: #64748b; margin-bottom: 24px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .card { background: #1e1e2e; border: 1px solid #2d2d3f; border-radius: 10px; padding: 20px; }
+  .card .label { font-size: 0.72rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .card .value { font-size: 2rem; font-weight: 700; color: #a78bfa; }
+  .card .sub { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+  .section-title { font-size: 0.85rem; color: #94a3b8; text-transform: uppercase;
+                   letter-spacing: 0.08em; margin: 20px 0 10px; }
+  .zone-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .zone-name { width: 140px; font-size: 0.8rem; color: #cbd5e1; flex-shrink: 0; }
+  .bar-wrap { flex: 1; background: #2d2d3f; border-radius: 4px; height: 18px; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, #7c3aed, #a78bfa);
+              border-radius: 4px; transition: width 0.6s ease; }
+  .bar-count { font-size: 0.75rem; color: #94a3b8; width: 40px; text-align: right; flex-shrink: 0; }
+  .anomaly { background: #1e1e2e; border-left: 3px solid #f59e0b;
+             border-radius: 6px; padding: 12px 16px; margin-bottom: 8px; }
+  .anomaly.CRITICAL { border-color: #ef4444; }
+  .anomaly.INFO { border-color: #3b82f6; }
+  .anomaly-type { font-size: 0.72rem; color: #94a3b8; margin-bottom: 4px; }
+  .anomaly-desc { font-size: 0.85rem; color: #e2e8f0; }
+  .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+                background: #22c55e; margin-right: 6px; animation: pulse 2s infinite; }
+  .status-dot.stale { background: #f59e0b; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .updated { font-size: 0.72rem; color: #475569; margin-top: 16px; }
+  .cam-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:0.8rem; }
+  .cam-id { width:130px; color:#94a3b8; }
+  .cam-status-ok { color:#22c55e; }
+  .cam-status-stale { color:#f59e0b; }
+</style>
+</head>
+<body>
+<h1>🏪 Brigade Road, Bangalore</h1>
+<p class="subtitle">STORE_BLR_002 · Live Intelligence Dashboard · Updates every 5s</p>
+
+<div class="grid" id="kpi-grid">
+  <div class="card"><div class="label">Unique Visitors</div><div class="value" id="visitors">—</div></div>
+  <div class="card"><div class="label">Est. Conversion Rate</div><div class="value" id="conv">—</div><div class="sub">Store-day estimate</div></div>
+  <div class="card"><div class="label">Queue Depth</div><div class="value" id="queue">—</div></div>
+  <div class="card"><div class="label">Abandonment Rate</div><div class="value" id="abandon">—</div></div>
+</div>
+
+<div class="section-title">Zone Visit Frequency</div>
+<div id="zones">Loading...</div>
+
+<div class="section-title">Active Anomalies</div>
+<div id="anomalies">Loading...</div>
+
+<div class="section-title">Camera Feeds</div>
+<div id="cameras">Loading...</div>
+
+<p class="updated" id="updated-at"></p>
+
+<script>
+const STORE = 'STORE_BLR_002';
+
+async function refresh() {
+  try {
+    const [metrics, anomalies, health] = await Promise.all([
+      fetch(`/stores/${STORE}/metrics`).then(r => r.json()),
+      fetch(`/stores/${STORE}/anomalies`).then(r => r.json()),
+      fetch('/health').then(r => r.json()),
+    ]);
+
+    document.getElementById('visitors').textContent = metrics.unique_visitors;
+    const convRate = metrics.estimated_daily_conversion_rate;
+    document.getElementById('conv').textContent =
+      convRate != null ? (convRate * 100).toFixed(1) + '%' : '—';
+    document.getElementById('queue').textContent = metrics.queue_depth;
+    document.getElementById('abandon').textContent =
+      (metrics.abandonment_rate * 100).toFixed(1) + '%';
+
+    // Zones
+    const zones = metrics.avg_dwell_per_zone || [];
+    const maxVisits = Math.max(...zones.map(z => z.visit_count), 1);
+    document.getElementById('zones').innerHTML = zones.length === 0
+      ? '<p style="color:#475569;font-size:0.8rem">No zone data yet</p>'
+      : zones.map(z => `
+        <div class="zone-bar">
+          <div class="zone-name">${z.zone_id.replace('_', ' ')}</div>
+          <div class="bar-wrap">
+            <div class="bar-fill" style="width:${(z.visit_count/maxVisits*100).toFixed(0)}%"></div>
+          </div>
+          <div class="bar-count">${z.visit_count}</div>
+        </div>`).join('');
+
+    // Anomalies
+    const anoms = anomalies.anomalies || [];
+    document.getElementById('anomalies').innerHTML = anoms.length === 0
+      ? '<p style="color:#22c55e;font-size:0.8rem">✓ No active anomalies</p>'
+      : anoms.map(a => `
+        <div class="anomaly ${a.severity}">
+          <div class="anomaly-type">${a.anomaly_type} · ${a.severity}</div>
+          <div class="anomaly-desc">${a.description}</div>
+        </div>`).join('');
+
+    // Cameras
+    const feeds = health.stores?.[0]?.camera_feeds || [];
+    document.getElementById('cameras').innerHTML = feeds.map(c => `
+      <div class="cam-row">
+        <span class="status-dot ${c.status === 'OK' ? '' : 'stale'}"></span>
+        <span class="cam-id">${c.camera_id}</span>
+        <span class="${c.status === 'OK' ? 'cam-status-ok' : 'cam-status-stale'}">
+          ${c.status} · ${c.lag_minutes != null ? c.lag_minutes.toFixed(1) + ' min lag' : 'no data'}
+        </span>
+      </div>`).join('');
+
+    document.getElementById('updated-at').textContent =
+      'Last updated: ' + new Date().toLocaleTimeString();
+  } catch(e) {
+    console.error('Refresh error:', e);
+  }
+}
+
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>

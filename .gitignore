@@ -1,0 +1,25 @@
+# Data files — not for repo
+data/store_intelligence.db
+data/events.jsonl
+data/pos_transactions.csv
+data/*.csv
+
+# CCTV footage — never commit
+*.mp4
+*.avi
+*.mov
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+.mypy_cache/
+
+# Mac
+.DS_Store
+
+# YOLOv8 weights (auto-downloaded)
+*.pt
+runs/

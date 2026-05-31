@@ -1,0 +1,12 @@
+# Run: pip install -r requirements-pipeline.txt
+# Detection pipeline dependencies — install locally on Mac (not in Docker)
+
+ultralytics>=8.3.0          # YOLOv8 + ByteTrack bundled
+opencv-python-headless>=4.10.0
+easyocr>=1.7.0              # CCTV timestamp OCR
+numpy>=1.26.0
+torch>=2.1.0                # CPU; M1/M2 Mac auto-detects MPS
+torchvision>=0.16.0
+requests>=2.32.0
+tqdm>=4.67.0
+Pillow>=10.0.0

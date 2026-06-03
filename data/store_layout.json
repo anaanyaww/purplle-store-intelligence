@@ -124,10 +124,10 @@
     }
   ],
   "camera_file_mapping": {
-    "CAM 1.mp4": "CAM_SKINCARE",
-    "CAM 2.mp4": "CAM_MAKEUP",
-    "CAM 3.mp4": "CAM_ENTRY",
-    "CAM 4.mp4": "CAM_BACKROOM",
-    "CAM 5.mp4": "CAM_BILLING"
+    "_instruction": "Official Store 1 camera files from challenge dataset",
+    "CAM 1 - zone.mp4":    "CAM_SKINCARE",
+    "CAM 2 - zone.mp4":    "CAM_MAKEUP",
+    "CAM 3 - entry.mp4":   "CAM_ENTRY",
+    "CAM 5 - billing.mp4": "CAM_BILLING"
   }
 }

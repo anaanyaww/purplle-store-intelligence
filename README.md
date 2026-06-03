@@ -113,3 +113,5 @@ CCTV Clips → YOLOv8n + ByteTrack → Zone Mapper → Staff Detector → emit.p
 - **Location:** Brigade Road, Bangalore
 - **POS data:** April 10, 2026 — 24 orders, 12:15–21:40 IST
 - **Footage:** April 10, 2026 — 5 cameras, 20:10–20:15 IST (floor) + 12:00–12:04 IST (entry)
+- - **Store 2 ID:** STORE_BLR_003 (Store 2 - Purplle)
+- **Store 2 cameras:** CAM_ENTRY_1, CAM_ENTRY_2, CAM_ZONE, CAM_BILLING

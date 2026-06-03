@@ -14,9 +14,9 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-STORE_ID        = "STORE_BLR_002"
 DWELL_EMIT_MS   = 30_000   # emit ZONE_DWELL every 30 seconds of continuous presence
-REENTRY_GAP_SEC = 60       # visitor gone >60s then reappears = re-entry candidate
+REENTRY_GAP_SEC = 60
+ENTRY_CAMERA_IDS = {"CAM_ENTRY", "CAM_ENTRY_1", "CAM_ENTRY_2"}
 REID_SIM_THRESH = 0.82     # cosine similarity threshold for re-ID
 
 
@@ -25,11 +25,12 @@ def _visitor_id() -> str:
 
 
 class EventEmitter:
-    def __init__(self, output_path: str, camera_id: str, base_ts: datetime):
+    def __init__(self, output_path: str, camera_id: str, base_ts: datetime,
+                 store_id: str = "STORE_BLR_002"):
         self.output_path = output_path
         self.camera_id   = camera_id
         self.base_ts     = base_ts
-        self.store_id    = STORE_ID
+        self.store_id    = store_id
 
         # track_id → state dict
         self._tracks: Dict[int, dict] = {}
@@ -86,7 +87,7 @@ class EventEmitter:
                     event_type = None   # will emit ZONE_ENTER only
                 else:
                     visitor_id = _visitor_id()
-                    event_type = "ENTRY" if self.camera_id == "CAM_ENTRY" else None
+                    event_type = "ENTRY" if self.camera_id in ENTRY_CAMERA_IDS else None
 
                 self._tracks[track_id] = {
                     "visitor_id":       visitor_id,
@@ -167,7 +168,7 @@ class EventEmitter:
                            state["session_seq"])
 
             # Determine exit direction for entry camera
-            if self.camera_id == "CAM_ENTRY":
+            if self.camera_id in ENTRY_CAMERA_IDS:
                 from .zone_mapper import is_entry_direction_inbound
                 inbound = is_entry_direction_inbound(state["history"])
                 if not inbound:

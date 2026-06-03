@@ -34,7 +34,8 @@ def build_camera_map(layout_path: str) -> dict:
 
 
 def process_clip(video_path: Path, camera_id: str, cam_config: dict,
-                 model, output_path: str, device: str) -> int:
+                 model, output_path: str, device: str,
+                 store_id: str = "STORE_BLR_002") -> int:
     """Process one video clip → append events to output_path. Returns event count."""
     from .timestamp_extractor import extract_base_timestamp
     from .zone_mapper import get_zone
@@ -42,7 +43,7 @@ def process_clip(video_path: Path, camera_id: str, cam_config: dict,
     from .emit import EventEmitter
 
     base_ts  = extract_base_timestamp(str(video_path), camera_id)
-    emitter  = EventEmitter(output_path, camera_id, base_ts)
+    emitter  = EventEmitter(output_path, camera_id, base_ts, store_id=store_id)
     staff_det = StaffDetector()
 
     logger.info(f"Processing {video_path.name} as {camera_id} from {base_ts.isoformat()}")
@@ -151,7 +152,8 @@ def main():
 
         logger.info(f"\n{'='*50}")
         process_clip(video_path, camera_id, cameras.get(camera_id, {}),
-                     model, args.output, device)
+                     model, args.output, device,
+                     store_id=layout.get("store_id", "STORE_BLR_002"))
         processed += 1
 
     # Count events

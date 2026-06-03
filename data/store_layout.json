@@ -37,16 +37,6 @@
       "source_file": "CAM 3.mp4"
     },
     {
-      "camera_id": "CAM_BACKROOM",
-      "zone_coverage": [
-        "BACKROOM"
-      ],
-      "is_customer_facing": false,
-      "clip_base_timestamp": "2026-04-10T20:11:27+05:30",
-      "note": "Stockroom \u2014 all detections is_staff=true",
-      "source_file": "CAM 4.mp4"
-    },
-    {
       "camera_id": "CAM_BILLING",
       "zone_coverage": [
         "CASH_COUNTER",
@@ -112,22 +102,13 @@
         "CAM_BILLING"
       ],
       "sku_zone": "ACCESSORIES"
-    },
-    {
-      "zone_id": "BACKROOM",
-      "zone_name": "Backroom and Stockroom",
-      "is_billing": false,
-      "camera_ids": [
-        "CAM_BACKROOM"
-      ],
-      "sku_zone": null
     }
   ],
   "camera_file_mapping": {
     "_instruction": "Official Store 1 camera files from challenge dataset",
-    "CAM 1 - zone.mp4":    "CAM_SKINCARE",
-    "CAM 2 - zone.mp4":    "CAM_MAKEUP",
-    "CAM 3 - entry.mp4":   "CAM_ENTRY",
+    "CAM 1 - zone.mp4": "CAM_SKINCARE",
+    "CAM 2 - zone.mp4": "CAM_MAKEUP",
+    "CAM 3 - entry.mp4": "CAM_ENTRY",
     "CAM 5 - billing.mp4": "CAM_BILLING"
   }
 }

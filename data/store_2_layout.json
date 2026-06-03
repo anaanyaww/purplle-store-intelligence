@@ -1,0 +1,49 @@
+{
+  "store_id": "STORE_BLR_003",
+  "store_name": "Store 2 - Purplle",
+  "open_hours": { "open": "10:00", "close": "22:00" },
+  "cameras": [
+    {
+      "camera_id": "CAM_ENTRY_1",
+      "source_file": "entry 1.mp4",
+      "zone_coverage": ["ENTRY_VESTIBULE"],
+      "is_customer_facing": true,
+      "clip_base_timestamp": "2026-04-10T12:00:00+05:30"
+    },
+    {
+      "camera_id": "CAM_ENTRY_2",
+      "source_file": "entry 2.mp4",
+      "zone_coverage": ["ENTRY_VESTIBULE"],
+      "is_customer_facing": true,
+      "clip_base_timestamp": "2026-04-10T12:00:00+05:30"
+    },
+    {
+      "camera_id": "CAM_ZONE",
+      "source_file": "zone.mp4",
+      "zone_coverage": ["FOH_CENTRAL", "LEFT_WALL_UNITS", "RIGHT_WALL_UNITS"],
+      "is_customer_facing": true,
+      "clip_base_timestamp": "2026-04-10T12:00:00+05:30"
+    },
+    {
+      "camera_id": "CAM_BILLING",
+      "source_file": "billing_area.mp4",
+      "zone_coverage": ["CASH_COUNTER"],
+      "is_customer_facing": true,
+      "clip_base_timestamp": "2026-04-10T12:00:00+05:30"
+    }
+  ],
+  "zones": [
+    { "zone_id": "ENTRY_VESTIBULE", "zone_name": "Entry Vestibule", "is_billing": false, "camera_ids": ["CAM_ENTRY_1", "CAM_ENTRY_2"] },
+    { "zone_id": "FOH_CENTRAL",     "zone_name": "Front of House Central", "is_billing": false, "camera_ids": ["CAM_ZONE"] },
+    { "zone_id": "LEFT_WALL_UNITS", "zone_name": "Left Wall Units", "is_billing": false, "camera_ids": ["CAM_ZONE"] },
+    { "zone_id": "RIGHT_WALL_UNITS","zone_name": "Right Wall Units", "is_billing": false, "camera_ids": ["CAM_ZONE"] },
+    { "zone_id": "MAKEUP_UNITS",    "zone_name": "Makeup Units", "is_billing": false, "camera_ids": ["CAM_ZONE"] },
+    { "zone_id": "CASH_COUNTER",    "zone_name": "Cash Counter / Billing", "is_billing": true, "camera_ids": ["CAM_BILLING"] }
+  ],
+  "camera_file_mapping": {
+    "entry 1.mp4":     "CAM_ENTRY_1",
+    "entry 2.mp4":     "CAM_ENTRY_2",
+    "zone.mp4":        "CAM_ZONE",
+    "billing_area.mp4":"CAM_BILLING"
+  }
+}

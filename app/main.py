@@ -32,7 +32,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-VALID_STORES = {"STORE_BLR_002"}
+VALID_STORES = {"STORE_BLR_002", "STORE_BLR_003"}
 
 
 @asynccontextmanager

@@ -5,9 +5,11 @@ Rules derived from confirmed camera placements and store_layout.json.
 
 # camera_id → single zone (cameras covering exactly one zone)
 SINGLE_ZONE_CAMERAS = {
-    "CAM_BACKROOM": "BACKROOM",
     "CAM_ENTRY":    "ENTRY_EXIT",
     "CAM_SKINCARE": "SKINCARE_WALL",
+    "CAM_ENTRY_1":  "ENTRY_VESTIBULE",
+    "CAM_ENTRY_2":  "ENTRY_VESTIBULE",
+    "CAM_BILLING":  "CASH_COUNTER",
 }
 
 
@@ -33,6 +35,15 @@ def get_zone(camera_id: str, cx: float, cy: float,
 
     if camera_id == "CAM_BILLING":
         return "ACCESSORIES" if rel_x > 0.55 else "CASH_COUNTER"
+
+    if camera_id == "CAM_ZONE":
+        # Store 2 zone camera: left=LEFT_WALL, center=FOH_CENTRAL, right=RIGHT_WALL
+        if rel_x < 0.30:
+            return "LEFT_WALL_UNITS"
+        elif rel_x > 0.70:
+            return "RIGHT_WALL_UNITS"
+        else:
+            return "FOH_CENTRAL"
 
     return "UNKNOWN"
 

@@ -28,7 +28,7 @@ visible fixture layout. This changed the zone boundary from 0.40 to
 0.35 in zone_mapper.py. The VLM identified a real fixture transition 
 point I had estimated slightly conservatively.
 
-Watching the footage confirmed staff wear all-black uniforms — clearly distinguishable from customers in CAM_SKINCARE and CAM_MAKEUP. This made the HSV colour histogram classifier viable as a primary signal rather than a fallback, which changed the staff detection architecture. CAM_BACKROOM had zero customers — only staff accessing inventory — which validated hardcoding is_staff=true for all backroom detections without needing any classifier.
+Watching the footage confirmed staff wear all-black uniforms — clearly distinguishable from customers in CAM_SKINCARE and CAM_MAKEUP. This made the HSV colour histogram classifier viable as a primary signal rather than a fallback, which changed the staff detection architecture. The stockroom area had zero customers — only staff accessing inventory — which validated hardcoding is_staff=true for all stockroom detections without needing any classifier.
 
 Watching CAM_ENTRY footage also revealed the camera captures Brigade Road foot traffic through the glass facade — a real-world complication not mentioned in the spec. Direction-of-travel detection reduces false ENTRY events but does not eliminate them. The 49 floor-camera visitors and 23 entry-camera events reflect two separate observation windows, not a detection error.
 

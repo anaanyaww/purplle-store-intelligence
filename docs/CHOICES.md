@@ -13,6 +13,21 @@
 
 **ByteTrack** (built into ultralytics): chosen over DeepSORT because it doesn't require appearance features for re-association — it uses IoU + kalman filter, which handles the partial occlusion cases in the billing clip well. Re-ID is handled separately via colour histograms, not embedded in the tracker.
 
+Zone boundary calibration used Claude Vision on the first frame of 
+CAM_MAKEUP. I initially estimated a 40/60 horizontal split for 
+FOH_CENTRAL vs MAKEUP_FLOOR. Claude Vision responded:
+
+"suggested_split_pct: 35/65, confidence: 0.82. The PMU/makeup 
+station occupies roughly the leftmost 30-35% of the frame, with 
+the transition to brand wall shelving beginning around the 35% mark. 
+The right 65% is more cohesive as MAKEUP_FLOOR since the tiered brand 
+gondolas (Lakmé, Faces Canada, Maybelline) dominate from that point."
+
+I accepted this correction — 35/65 is more defensible given the 
+visible fixture layout. This changed the zone boundary from 0.40 to 
+0.35 in zone_mapper.py. The VLM identified a real fixture transition 
+point I had estimated slightly conservatively.
+
 Watching the footage confirmed staff wear all-black uniforms — clearly distinguishable from customers in CAM_SKINCARE and CAM_MAKEUP. This made the HSV colour histogram classifier viable as a primary signal rather than a fallback, which changed the staff detection architecture. CAM_BACKROOM had zero customers — only staff accessing inventory — which validated hardcoding is_staff=true for all backroom detections without needing any classifier.
 
 Watching CAM_ENTRY footage also revealed the camera captures Brigade Road foot traffic through the glass facade — a real-world complication not mentioned in the spec. Direction-of-travel detection reduces false ENTRY events but does not eliminate them. The 49 floor-camera visitors and 23 entry-camera events reflect two separate observation windows, not a detection error.

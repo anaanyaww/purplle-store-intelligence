@@ -31,7 +31,7 @@ def get_zone(camera_id: str, cx: float, cy: float,
     rel_y = cy / frame_h if frame_h > 0 else 0.5
 
     if camera_id == "CAM_MAKEUP":
-        return "FOH_CENTRAL" if rel_x < 0.40 else "MAKEUP_FLOOR"
+        return "FOH_CENTRAL" if rel_x < 0.35 else "MAKEUP_FLOOR"
 
     if camera_id == "CAM_BILLING":
         return "ACCESSORIES" if rel_x > 0.55 else "CASH_COUNTER"

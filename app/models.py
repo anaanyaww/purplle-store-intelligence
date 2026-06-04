@@ -1,6 +1,8 @@
 """
 Pydantic models for the Store Intelligence API.
 Schema matches the problem statement event spec exactly.
+group_id, group_size, zone_hotspot_x/y added per Purplle's
+sample_events.jsonl reference format.
 """
 from __future__ import annotations
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -16,6 +18,10 @@ class EventMetadata(BaseModel):
     queue_depth: Optional[int] = None
     sku_zone: Optional[str] = None
     session_seq: int = 0
+    group_id: Optional[str] = None
+    group_size: Optional[int] = None
+    zone_hotspot_x: Optional[float] = None
+    zone_hotspot_y: Optional[float] = None
 
 
 EventType = Literal[
@@ -35,6 +41,10 @@ class StoreEvent(BaseModel):
     dwell_ms: int = Field(default=0, ge=0)
     is_staff: bool = False
     confidence: float = Field(ge=0.0, le=1.0)
+    group_id: Optional[str] = None
+    group_size: Optional[int] = None
+    zone_hotspot_x: Optional[float] = None
+    zone_hotspot_y: Optional[float] = None
     metadata: EventMetadata = Field(default_factory=EventMetadata)
 
     @field_validator("timestamp")
